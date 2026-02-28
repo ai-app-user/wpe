@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>One Page Editor</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div id="appShell">
+    <div id="pageWrap">
+      <div id="page" aria-label="A4 page preview">
+        <div class="editHint" id="editHint">Edit mode</div>
+
+        <div id="layer1" class="layer">
+          <div id="pageBg" class="bg" data-kind="pagebg"></div>
+        </div>
+
+        <div id="layer2" class="layer"></div>
+
+        <div id="layer3" class="layer">
+          <div id="blocksCol"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside id="editorDock">
+      <div id="panel">
+        <div class="toolbarRow">
+          <div class="pill">Mode: <b id="modeBadge">view</b></div>
+          <div class="pill">Layer: <b id="layerBadge">layer3</b></div>
+          <div class="pill">Sel: <b id="selBadge">none</b></div>
+        </div>
+
+        <!-- Compact toolbar -->
+        <div class="toolbarRow compact">
+          <div class="toolGroup" aria-label="Active layer">
+            <button class="iconBtn" id="layerBtn1" title="Select/edit Layer 1 (background)">L1</button>
+            <button class="iconBtn" id="layerBtn2" title="Select/edit Layer 2 (pictures)">L2</button>
+            <button class="iconBtn" id="layerBtn3" title="Select/edit Layer 3 (blocks/text)">L3</button>
+          </div>
+
+          <div class="toolGroup" aria-label="Selection helpers">
+            <button class="iconBtn" id="selPrev" title="Select previous (context aware)">?</button>
+            <button class="iconBtn" id="selNext" title="Select next (context aware)">?</button>
+            <button class="iconBtn" id="selParent" title="Select parent (block/column)">?</button>
+            <button class="iconBtn" id="selChild" title="Select first child (block/group/col)">?</button>
+          </div>
+
+          <div class="toolGroup" aria-label="Node operations">
+            <button class="iconBtn" id="moveUp" title="Move up">Up</button>
+            <button class="iconBtn" id="moveDown" title="Move down">Dn</button>
+            <button class="iconBtn" id="addAfter" title="Add after">+</button>
+            <button class="iconBtn" id="delNode" title="Delete">-</button>
+          </div>
+        </div>
+
+        <!-- Dynamic controls (only relevant fields are shown) -->
+        <div id="controls">
+          <div class="sectionTitle" id="sectionTitle">No selection</div>
+
+          <!-- Common -->
+          <div class="grid2" id="rowCommon1">
+            <div>
+              <label>Opacity</label>
+              <input id="uiOpacity" type="number" min="0" max="1" step="0.05" />
+            </div>
+            <div>
+              <label>Color</label>
+              <input id="uiColor" type="color" />
+            </div>
+          </div>
+
+          <!-- Text -->
+          <div id="textControls">
+            <div class="grid2">
+              <div>
+                <label>Font preset</label>
+                <select id="uiFontPreset">
+                  <option value="">(no change)</option>
+                  <option value="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">System</option>
+                  <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+                  <option value="'Times New Roman', Times, serif">Times</option>
+                  <option value="Arial, Helvetica, sans-serif">Arial</option>
+                  <option value="'Courier New', Courier, monospace">Courier</option>
+                </select>
+              </div>
+              <div>
+                <label>Font custom</label>
+                <input id="uiFontCustom" type="text" placeholder="Inter, sans-serif" />
+              </div>
+            </div>
+
+            <div class="grid3" style="margin-top:10px">
+              <div>
+                <label>Size (px)</label>
+                <input id="uiSize" type="number" min="6" max="140" step="1" />
+              </div>
+              <div>
+                <label>Weight</label>
+                <select id="uiWeight">
+                  <option value="">(no change)</option>
+                  <option value="300">300</option>
+                  <option value="400">400</option>
+                  <option value="500">500</option>
+                  <option value="600">600</option>
+                  <option value="700">700</option>
+                  <option value="800">800</option>
+                  <option value="900">900</option>
+                </select>
+              </div>
+              <div>
+                <label>Align</label>
+                <select id="uiAlign">
+                  <option value="">(no change)</option>
+                  <option value="left">left</option>
+                  <option value="center">center</option>
+                  <option value="right">right</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top:10px">
+              <label>Text</label>
+              <textarea id="uiText" spellcheck="false"></textarea>
+            </div>
+          </div>
+
+          <!-- Block -->
+          <div id="blockControls">
+            <div class="grid3">
+              <div>
+                <label>Height %</label>
+                <input id="uiHeightPct" type="number" min="1" max="100" step="0.5" />
+              </div>
+              <div>
+                <label>Width %</label>
+                <input id="uiWidthPct" type="number" min="10" max="100" step="1" />
+              </div>
+              <div>
+                <label>Padding px</label>
+                <input id="uiPaddingPx" type="number" min="0" max="80" step="1" />
+              </div>
+            </div>
+
+            <div class="grid2" style="margin-top:10px">
+              <div>
+                <label>AlignX</label>
+                <select id="uiAlignX">
+                  <option value="">(no change)</option>
+                  <option value="left">left</option>
+                  <option value="center">center</option>
+                  <option value="right">right</option>
+                </select>
+              </div>
+              <div>
+                <label>AlignY</label>
+                <select id="uiAlignY">
+                  <option value="">(no change)</option>
+                  <option value="top">top</option>
+                  <option value="center">center</option>
+                  <option value="bottom">bottom</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top:10px">
+              <label>Block background image</label>
+              <input id="uiBgUrl" type="text" placeholder="assets/..." />
+            </div>
+          </div>
+
+          <!-- Column -->
+          <div id="colControls">
+            <div class="grid2">
+              <div>
+                <label>Column width % (optional)</label>
+                <input id="uiColWidthPct" type="number" min="10" max="100" step="1" />
+              </div>
+              <div class="muted">
+                Leave empty for equal columns.
+              </div>
+            </div>
+          </div>
+
+          <!-- Picture -->
+          <div id="picControls">
+            <div class="grid3">
+              <div>
+                <label>X %</label>
+                <input id="uiPicX" type="number" min="0" max="100" step="0.1" />
+              </div>
+              <div>
+                <label>Y %</label>
+                <input id="uiPicY" type="number" min="0" max="100" step="0.1" />
+              </div>
+              <div>
+                <label>W %</label>
+                <input id="uiPicW" type="number" min="1" max="100" step="0.1" />
+              </div>
+            </div>
+
+            <div class="grid3" style="margin-top:10px">
+              <div>
+                <label>Align</label>
+                <select id="uiPicAlign">
+                  <option value="">(no change)</option>
+                  <option value="left">left</option>
+                  <option value="center">center</option>
+                  <option value="right">right</option>
+                </select>
+              </div>
+              <div>
+                <label>Rotate deg</label>
+                <input id="uiPicRot" type="number" min="-180" max="180" step="1" />
+              </div>
+              <div>
+                <label>URL</label>
+                <input id="uiPicUrl" type="text" placeholder="assets/pic1.png" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Page / Layer1 -->
+          <div id="pageControls">
+            <div style="margin-top:6px">
+              <label>Page background image (Layer 1)</label>
+              <input id="uiPageBgUrl" type="text" placeholder="assets/background.png" />
+            </div>
+            <div class="grid2" style="margin-top:10px">
+              <div>
+                <label>Background position</label>
+                <select id="uiPageBgPos">
+                  <option value="">(no change)</option>
+                  <option value="center">center</option>
+                  <option value="top">top</option>
+                  <option value="bottom">bottom</option>
+                  <option value="left">left</option>
+                  <option value="right">right</option>
+                </select>
+              </div>
+              <div>
+                <label>Background size</label>
+                <select id="uiPageBgSize">
+                  <option value="">(no change)</option>
+                  <option value="cover">cover</option>
+                  <option value="contain">contain</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid2" style="margin-top:10px">
+              <div>
+                <label>Outside page color</label>
+                <input id="uiOutsideBg" type="color" />
+              </div>
+              <div class="muted">
+                This sets the body background around the A4 page.
+              </div>
+            </div>
+          </div>
+
+          <div class="btns">
+            <button id="uiApply" disabled>Apply</button>
+            <button id="uiRevert" disabled>Revert</button>
+          </div>
+
+          <div style="margin-top:10px">
+            <label>Preview (no children)</label>
+            <textarea id="uiPreview" readonly></textarea>
+          </div>
+        </div>
+
+        <div class="btns" style="margin-top:10px">
+          <button id="exportJson">Export JSON</button>
+          <button id="copyJson">Copy JSON</button>
+          <button id="reset">Reset</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
